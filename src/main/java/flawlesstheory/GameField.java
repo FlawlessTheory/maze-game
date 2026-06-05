@@ -18,7 +18,6 @@ public class GameField extends JPanel {
 
     @Override
     public void paintComponent(Graphics g) {
-        System.out.println("перерисовка");
         Graphics2D g2d = (Graphics2D) g;
         g2d.setBackground(Color.WHITE);
         g.clearRect(0, 0, getWidth(), getHeight());
