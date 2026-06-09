@@ -38,7 +38,6 @@ public class Main {
         // to see how IntelliJ IDEA suggests fixing it.
         JFrame window = new JFrame("Swing Sandbox");
         window.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        window.setLocationRelativeTo(null);
         window.setLayout(new BorderLayout(0, 0));
 
         GameField field = new GameField(tiles, playerX, playerY);
@@ -66,8 +65,9 @@ public class Main {
             }
         });
         field.setPreferredSize(new Dimension(width, height));
-        window.getContentPane().add(field, BorderLayout.CENTER);
+        window.add(field, BorderLayout.CENTER);
         window.pack();
         window.setVisible(true);
+        window.setLocationRelativeTo(null);
     }
 }

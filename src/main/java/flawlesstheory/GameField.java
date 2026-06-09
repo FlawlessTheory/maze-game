@@ -62,10 +62,14 @@ public class GameField extends JPanel {
     private void win(){
         JDialog dialog = new JDialog();
         dialog.setTitle("Победа!");
-        dialog.setLocationRelativeTo(this);
         dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.add(new JLabel("Победа!"));
-        dialog.setSize(100, 75);
+        dialog.setLayout(new BorderLayout(0, 0));
+
+        JLabel label = new JLabel("Победа!", JLabel.CENTER);
+        label.setPreferredSize(new Dimension(100, 50));
+        dialog.add(label, BorderLayout.CENTER);
+        dialog.pack();
         dialog.setVisible(true);
+        dialog.setLocationRelativeTo(this);
     }
 }
