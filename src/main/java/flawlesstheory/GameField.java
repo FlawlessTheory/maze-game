@@ -5,6 +5,8 @@ import java.awt.*;
 
 public class GameField extends JPanel {
 
+    private static int width = 800;
+    private static int height = 600;
     private final static int TILE_SIZE = 40;
     private final char[][] tiles;
     private int playerPosX;
@@ -57,6 +59,10 @@ public class GameField extends JPanel {
             playerPosX += shift;
             repaint();
         }
+    }
+    @Override
+    public Dimension getPreferredSize() {
+        return new Dimension(width, height);
     }
 
     private void win(){
