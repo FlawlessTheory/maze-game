@@ -2,56 +2,82 @@ package flawlesstheory;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
+import java.awt.event.WindowEvent;
+import java.awt.event.WindowListener;
 
 public class GameWindow extends JFrame {
 
-    private final LevelData levelData;
-
-    public GameWindow(String title, LevelData levelData) {
-        super(title);
-        this.levelData = levelData;
+    public void init() {
+        showMenu();
     }
 
-    public void setup() {
-        this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        this.setLayout(new BorderLayout(0, 0));
-
-        GameField field = new GameField(levelData.getTiles(), levelData.getPlayerPosX(), levelData.getPlayerPosY());
-        field.setFocusable(true);
-        field.addKeyListener(new KeyListener() {
-            @Override
-            public void keyTyped(KeyEvent e) {
-                /// none
-            }
-
-            @Override
-            public void keyPressed(KeyEvent e) {
-                switch (e.getKeyCode()) {
-                    case KeyEvent.VK_UP:
-                        field.shiftY(-1);
-                        break;
-                    case KeyEvent.VK_DOWN:
-                        field.shiftY(1);
-                        break;
-                    case KeyEvent.VK_LEFT:
-                        field.shiftX(-1);
-                        break;
-                    case KeyEvent.VK_RIGHT:
-                        field.shiftX(1);
-                        break;
-                    default:
-                        break;
-                }
-            }
-
-            @Override
-            public void keyReleased(KeyEvent e) {
-                /// none
-            }
+    public void showMenu() {
+        MenuPanel panel = new MenuPanel();
+        panel.init();
+        panel.addPropertyChangeListener(MenuPanel.PROPERTY_NAME, event -> {
+            this.remove(panel);
+            loadGame((LevelData) event.getNewValue());
         });
-        this.add(field, BorderLayout.CENTER);
+        this.add(panel);
+        this.pack();
+    }
+
+    public void loadGame(LevelData levelData) {
+        GameWindow ref = this;
+
+        GameFieldPanel panel = new GameFieldPanel(levelData.getTiles(), levelData.getPlayerPosX(), levelData.getPlayerPosY());
+        panel.init();
+        panel.addPropertyChangeListener(GameFieldPanel.PROPERTY_NAME, event -> {
+            JDialog winDialog = new JDialog(this, "Победа!");
+            winDialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
+            winDialog.setLayout(new BorderLayout(0, 0));
+            winDialog.addWindowListener(new WindowListener() {
+                @Override
+                public void windowOpened(WindowEvent e) {
+                    /// none
+                }
+
+                @Override
+                public void windowClosing(WindowEvent e) {
+                    /// none
+                }
+
+                @Override
+                public void windowClosed(WindowEvent e) {
+                    e.getWindow().dispose();
+                    ref.remove(panel);
+                    ref.showMenu();
+                }
+
+                @Override
+                public void windowIconified(WindowEvent e) {
+                    /// none
+                }
+
+                @Override
+                public void windowDeiconified(WindowEvent e) {
+                    /// none
+                }
+
+                @Override
+                public void windowActivated(WindowEvent e) {
+                    /// none
+                }
+
+                @Override
+                public void windowDeactivated(WindowEvent e) {
+                    /// none
+                }
+            });
+
+            JLabel text = new JLabel("Закройте диалог, чтобы вернуться в меню.");
+            text.setPreferredSize(new Dimension(200, 50));
+            winDialog.add(text, BorderLayout.CENTER);
+            winDialog.pack();
+            winDialog.setVisible(true);
+            winDialog.setLocationRelativeTo(this);
+        });
+        this.add(panel);
         this.pack();
     }
 

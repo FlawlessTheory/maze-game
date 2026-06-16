@@ -1,21 +1,56 @@
 package flawlesstheory;
 
-import javax.swing.*;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
 
-public class GameField extends JPanel {
+public class GameFieldPanel extends CustomPanel {
 
-    private static int width = 800;
-    private static int height = 600;
-    private final static int TILE_SIZE = 40;
+    public static final String PROPERTY_NAME = "win";
+    private static final int TILE_SIZE = 40;
     private final char[][] tiles;
     private int playerPosX;
     private int playerPosY;
 
-    public GameField(char[][] tiles, int playerPosX, int playerPosY) {
+    public GameFieldPanel(char[][] tiles, int playerPosX, int playerPosY) {
         this.tiles = tiles;
         this.playerPosX = playerPosX;
         this.playerPosY = playerPosY;
+    }
+
+    public void init() {
+        this.setFocusable(true);
+        this.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                /// none
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                switch (e.getKeyCode()) {
+                    case KeyEvent.VK_UP:
+                        shiftY(-1);
+                        break;
+                    case KeyEvent.VK_DOWN:
+                        shiftY(1);
+                        break;
+                    case KeyEvent.VK_LEFT:
+                        shiftX(-1);
+                        break;
+                    case KeyEvent.VK_RIGHT:
+                        shiftX(1);
+                        break;
+                    default:
+                        break;
+                }
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                /// none
+            }
+        });
     }
 
     @Override
@@ -39,7 +74,7 @@ public class GameField extends JPanel {
         }
     }
 
-    public void shiftY(int shift) {
+    private void shiftY(int shift) {
         if (tiles[playerPosY + shift][playerPosX] == 'O') {
             win();
         } else if (tiles[playerPosY + shift][playerPosX] == ' ') {
@@ -50,7 +85,7 @@ public class GameField extends JPanel {
         }
     }
 
-    public void shiftX(int shift) {
+    private void shiftX(int shift) {
         if (tiles[playerPosY][playerPosX + shift] == 'O') {
             win();
         } else if (tiles[playerPosY][playerPosX + shift] == ' ') {
@@ -60,22 +95,8 @@ public class GameField extends JPanel {
             repaint();
         }
     }
-    @Override
-    public Dimension getPreferredSize() {
-        return new Dimension(width, height);
-    }
 
     private void win(){
-        JDialog dialog = new JDialog();
-        dialog.setTitle("Победа!");
-        dialog.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);
-        dialog.setLayout(new BorderLayout(0, 0));
-
-        JLabel label = new JLabel("Победа!", JLabel.CENTER);
-        label.setPreferredSize(new Dimension(100, 50));
-        dialog.add(label, BorderLayout.CENTER);
-        dialog.pack();
-        dialog.setVisible(true);
-        dialog.setLocationRelativeTo(this);
+        this.firePropertyChange(PROPERTY_NAME, null, null);
     }
 }
