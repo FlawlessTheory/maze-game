@@ -1,7 +1,6 @@
 package flawlesstheory;
 
 import javax.swing.*;
-import javax.swing.filechooser.FileFilter;
 import java.awt.*;
 import java.io.File;
 import java.util.Scanner;
@@ -14,13 +13,16 @@ public class MenuPanel extends CustomPanel {
 
     public void init() {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        this.setBackground(Color.WHITE);
 
+        this.add(Box.createVerticalStrut(10));
         JButton button = new JButton("Выбрать файл уровня");
         button.setActionCommand(LOAD_BUTTON_COMMAND);
         button.addActionListener(e -> {
             JFileChooser fileChooser = new JFileChooser();
             fileChooser.setFileFilter(new LevelFileFilter());
             fileChooser.setFileSelectionMode(JFileChooser.FILES_AND_DIRECTORIES);
+            fileChooser.setCurrentDirectory(new File(System.getProperty("user.dir")));
             if (fileChooser.showOpenDialog(this) == JFileChooser.APPROVE_OPTION) {
                 LevelData data = readLevelData(fileChooser.getSelectedFile());
                 if (data != null) {
@@ -32,14 +34,16 @@ public class MenuPanel extends CustomPanel {
         });
         button.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.add(button);
-        this.add(Box.createVerticalGlue());
+        this.add(Box.createVerticalStrut(50));
 
         JLabel headerLabel = new JLabel("СПРАВКА О ФОРМАТЕ ФАЙЛА УРОВНЯ");
         headerLabel.setHorizontalAlignment(SwingConstants.CENTER);
         headerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         this.add(headerLabel);
-        this.add(Box.createVerticalGlue());
+        this.add(Box.createVerticalStrut(10));
 
+        Box box = new Box(BoxLayout.X_AXIS);
+        box.add(Box.createHorizontalStrut(50));
         String text = String.join("\n",
                 "Уровень составляется из следующих символов латинского алфавита:",
                 "- x - непроходимая клетка;",
@@ -48,11 +52,14 @@ public class MenuPanel extends CustomPanel {
                 "- пробел - проходимая клетка.",
                 "Лабиринт должен быть размером ровно 20х15 клеток. Выход игрока за пределы границ приведёт к ошибке, поэтому окружайте лабиринт стенами!",
                 "Расширение файла лабиринта - .lvl");
-        JTextArea helpText = new JTextArea(text);
-        helpText.setAlignmentX(Component.CENTER_ALIGNMENT);
-        helpText.setLineWrap(true);
-        helpText.setEditable(false);
-        this.add(helpText);
+        JTextPane textPane = new JTextPane();
+        textPane.setText(text);
+        textPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+        textPane.setEditable(false);
+        box.add(textPane);
+        box.add(Box.createHorizontalStrut(50));
+
+        this.add(box);
     }
 
     private LevelData readLevelData(File level) {
