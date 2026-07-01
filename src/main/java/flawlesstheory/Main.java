@@ -5,7 +5,8 @@ import java.awt.*;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws Exception {
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         GameWindow window = new GameWindow();
         window.setTitle("Swing Sandbox");
         window.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
